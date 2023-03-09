@@ -1,4 +1,5 @@
 use crate::cli_commands::{Cli, Commands};
+use crate::clipboard;
 use base64::engine::general_purpose;
 use clap::Parser;
 use log::info;
@@ -79,6 +80,9 @@ impl Hoard {
                 let commands =
                     self.list_commands(simple.to_owned(), json.to_owned(), filter.clone());
                 if let Some(c) = commands {
+                    if !cli.autocomplete {
+                        clipboard::copy(c.clone());
+                    }
                     autocomplete_command = c;
                 }
             }
@@ -204,6 +208,7 @@ impl Hoard {
         match command_result {
             Ok(c) => {
                 println!("{}", c.command);
+                clipboard::copy(c.command);
             }
             Err(e) => eprintln!("{e}"),
         }

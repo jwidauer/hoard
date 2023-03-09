@@ -1,3 +1,4 @@
+use crate::clipboard;
 use crate::command::hoard_command::{HoardCommand, Parameterized};
 use crate::gui::commands_gui::{ControlState, DrawState, EditSelection, State};
 use termion::event::Key;
@@ -10,7 +11,7 @@ pub fn key_handler(
     namespace_tabs: &[&str],
 ) -> Option<HoardCommand> {
     match input {
-        Key::Esc | Key::Ctrl('c' | 'd' | 'g') => {
+        Key::Esc | Key::Ctrl('d' | 'g') => {
             // Definitely exit program
             state.control_state = ControlState::Search;
             state.should_exit = true;
@@ -97,6 +98,22 @@ pub fn key_handler(
                 .clone();
             state.should_delete = true;
             Some(selected_command)
+        }
+        Key::Ctrl('c') => {
+            let selected_command = state
+                .commands
+                .clone()
+                .get(
+                    state
+                        .command_list_state
+                        .selected()
+                        .expect("there is always a selected command"),
+                )
+                .map(|c| c.command.clone())
+                .unwrap_or_default();
+
+            clipboard::copy(selected_command);
+            None
         }
         // Select command
         Key::Char('\n') => {

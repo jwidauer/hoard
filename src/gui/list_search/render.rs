@@ -127,7 +127,7 @@ pub fn draw(
             )))
             .alignment(Alignment::Left);
         let help_hint = Paragraph::new(format!(
-            "Create <Ctrl-W> | Delete <Ctrl-X> | Help {HELP_KEY}"
+            "Copy <Ctrl-C> | Create <Ctrl-W> | Delete <Ctrl-X> | Help {HELP_KEY}"
         ))
         .style(Style::default().fg(Color::Rgb(
             config.primary_color.unwrap().0,
